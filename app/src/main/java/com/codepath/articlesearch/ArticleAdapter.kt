@@ -13,24 +13,20 @@ import com.bumptech.glide.Glide
 const val ARTICLE_EXTRA = "ARTICLE_EXTRA"
 private const val TAG = "ArticleAdapter"
 
-class ArticleAdapter(private val context: Context, private val articles: List<Article>) :
+class ArticleAdapter(private val context: Context, private val displayArticles: MutableList<DisplayArticle>) :
     RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_article, parent, false)
         return ViewHolder(view)
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // TODO: Get the individual article and bind to holder
-
-        val article = articles[position]
-        holder.bind(article)
-
+        val displayArticle = displayArticles[position]
+        holder.bind(displayArticle)
     }
 
-    override fun getItemCount() = articles.size
+    override fun getItemCount() = displayArticles.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -43,29 +39,23 @@ class ArticleAdapter(private val context: Context, private val articles: List<Ar
             itemView.setOnClickListener(this)
         }
 
-        // TODO: Write a helper method to help set up the onBindViewHolder method
-
-        fun bind(article: Article) {
-            titleTextView.text = article.headline?.main
-            abstractTextView.text = article.abstract
+        fun bind(displayArticle: DisplayArticle) {
+            titleTextView.text = displayArticle.headline
+            abstractTextView.text = displayArticle.articleAbstract
 
             Glide.with(context)
-                .load(article.mediaImageUrl)
+                .load(displayArticle.mediaImageUrl)
                 .into(mediaImageView)
         }
 
         override fun onClick(v: View?) {
-            // TODO: Get selected article
-            val article = articles[absoluteAdapterPosition]
+            // Get selected article
+            val displayArticle = displayArticles[absoluteAdapterPosition]
 
-            // TODO: Navigate to Details screen and pass selected article
-
+            // Navigate to Details screen and pass selected article
             val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra(ARTICLE_EXTRA, article)
+            intent.putExtra(ARTICLE_EXTRA, displayArticle)
             context.startActivity(intent)
-
-
-
         }
     }
 }
